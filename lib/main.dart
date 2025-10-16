@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+class App extends StatelessWidget {
+  const App({super.key});
 
-void main() {}
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+void main() {
+  runApp(const App());
+}
 
