@@ -56,6 +56,7 @@ class StyledButton extends StatelessWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
+  bool _isFootlong = true;
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -81,7 +82,7 @@ class _OrderScreenState extends State<OrderScreen> {
           children: <Widget>[
             OrderItemDisplay(
               _quantity,
-              'Footlong',
+              _isFootlong ? 'Footlong' : 'Six-inch',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -103,6 +104,25 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_isFootlong ? 'Footlong' : 'Six-inch'),
+                Switch(
+                  value: _isFootlong,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      _isFootlong = newValue;
+                    });
+                  },
+                  activeThumbColor: Colors.white,
+                  activeTrackColor: Colors.red,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.red,
+                ),
+              ],
+            )
           ],
         ),
       ),
