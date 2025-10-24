@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,6 +26,31 @@ class OrderScreen extends StatefulWidget {
   @override
   State<OrderScreen> createState() {
     return _OrderScreenState();
+  }
+}
+
+class StyledButton extends StatelessWidget {
+  final VoidCallback ?onPressed;
+  final String text;
+  final bool buttonEnabled;
+
+  const StyledButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.buttonEnabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: buttonEnabled ? onPressed : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: buttonEnabled ?  Colors.red : Colors.grey,
+        foregroundColor: Colors.white,
+      ),
+      child: Text(text),
+    );
   }
 }
 
@@ -59,13 +86,20 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: _increaseQuantity,
-                  child: const Text('Add'),
+                SizedBox(
+                  child: StyledButton(
+                    onPressed: _increaseQuantity,
+                    text: 'Add',
+                    buttonEnabled: _quantity < widget.maxQuantity,
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: _decreaseQuantity,
-                  child: const Text('Remove'),
+                const SizedBox(width: 14),
+                SizedBox(
+                  child: StyledButton(
+                    onPressed: _decreaseQuantity,
+                    text: 'Remove',
+                    buttonEnabled: _quantity > 0,
+                  ),
                 ),
               ],
             ),
