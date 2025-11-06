@@ -87,13 +87,24 @@ void main() {
       expect(find.text('3 white footlong sandwich(es): 🥪🥪🥪'), findsOneWidget);
     });
 
-    testWidgets('Using Switch changes option',
+    testWidgets('Using Switch change sandwich type option',
         (WidgetTester tester) async {
       await tester.pumpWidget(const App());
       expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
-      await tester.tap(find.byType(Switch));
+      final sandwichSwitch = find.byKey( const Key('sandwich_type_switch'));
+      await tester.tap(sandwichSwitch);
       await tester.pump();
       expect(find.text('0 white six-inch sandwich(es): '), findsOneWidget);
+    });
+
+    testWidgets('Using Switch change toasted option',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const App());
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
+      final toastedSwitch = find.byKey( const Key('toasted_switch'));
+      await tester.tap(toastedSwitch);
+      await tester.pump();
+      expect(find.text('0 white footlong sandwich(es): '), findsOneWidget);
     });
   });
 }

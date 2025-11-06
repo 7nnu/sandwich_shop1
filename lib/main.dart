@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sandwich_shop/views/app_styles.dart';
 import 'package:sandwich_shop/repositories/order_repository.dart';
 
-
 enum BreadType { white, wheat, wholemeal }
+
 void main() {
   runApp(const App());
 }
@@ -36,6 +36,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final TextEditingController _notesController = TextEditingController();
   bool _isFootlong = true;
   BreadType _selectedBreadType = BreadType.white;
+  bool _isToasted = false;
 
   @override
   void initState() {
@@ -95,6 +96,11 @@ class _OrderScreenState extends State<OrderScreen> {
       sandwichType = 'six-inch';
     }
 
+    String isToasted = 'untoasted';
+    if (_isToasted) {
+      isToasted = 'toasted';
+    }
+
     String noteForDisplay;
     if (_notesController.text.isEmpty) {
       noteForDisplay = 'No notes added.';
@@ -118,6 +124,7 @@ class _OrderScreenState extends State<OrderScreen> {
               itemType: sandwichType,
               breadType: _selectedBreadType,
               orderNote: noteForDisplay,
+              toastType: isToasted
             ),
             const SizedBox(height: 20),
             Row(
@@ -125,10 +132,25 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 const Text('six-inch', style: normalText),
                 Switch(
+                  key: const Key('sandwich_type_switch'),
                   value: _isFootlong,
                   onChanged: _onSandwichTypeChanged,
                 ),
                 const Text('footlong', style: normalText),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('untoasted', style: normalText),
+                Switch(
+                  key: const Key('toasted_switch'),
+                  value: _isToasted,
+                  onChanged: (value) {
+                    setState(() => _isToasted = value);
+                  },
+                ),
+                const Text('toasted', style: normalText),
               ],
             ),
             const SizedBox(height: 10),
@@ -175,7 +197,6 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 }
 
-
 class StyledButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData icon;
@@ -216,6 +237,7 @@ class OrderItemDisplay extends StatelessWidget {
   final int quantity;
   final String itemType;
   final BreadType breadType;
+  final String toastType;
   final String orderNote;
 
   const OrderItemDisplay({
@@ -224,12 +246,13 @@ class OrderItemDisplay extends StatelessWidget {
     required this.itemType,
     required this.breadType,
     required this.orderNote,
+    required this.toastType,
   });
 
   @override
   Widget build(BuildContext context) {
     String displayText =
-        '$quantity ${breadType.name} $itemType sandwich(es): ${'🥪' * quantity}';
+        '$quantity $toastType ${breadType.name} $itemType sandwich(es): ${'🥪' * quantity}';
 
     return Column(
       children: [
