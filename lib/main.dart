@@ -36,7 +36,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   SandwichType _selectedSandwichType = SandwichType.veggieDelight;
   bool _isFootlong = true;
-  BreadType _selectedBreadType = BreadType.white;
+  BreadType _selectedBreadType = BreadType.White;
   int _quantity = 1;
 
   @override
@@ -65,16 +65,21 @@ class _OrderScreenState extends State<OrderScreen> {
         _cart.add(sandwich, quantity: _quantity);
       });
 
-      String sizeText;
-      if (_isFootlong) {
-        sizeText = 'footlong';
-      } else {
-        sizeText = 'six-inch';
-      }
-      String confirmationMessage =
-          'Added $_quantity $sizeText ${sandwich.name} sandwich(es) on ${_selectedBreadType.name} bread to cart';
+      final sizeText = _isFootlong ? 'Footlong' : 'Six Inch';
+      final name = sandwich.name;
+      final message = _quantity > 1
+          ? '$_quantity $sizeText $name sandwiches were added to the cart'
+          : '$sizeText $name was added to the cart';
 
-      debugPrint(confirmationMessage);
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+
+      debugPrint(message);
     }
   }
 
@@ -89,7 +94,7 @@ class _OrderScreenState extends State<OrderScreen> {
     List<DropdownMenuEntry<SandwichType>> entries = [];
     for (SandwichType type in SandwichType.values) {
       Sandwich sandwich =
-          Sandwich(type: type, isFootlong: true, breadType: BreadType.white);
+          Sandwich(type: type, isFootlong: true, breadType: BreadType.White);
       DropdownMenuEntry<SandwichType> entry = DropdownMenuEntry<SandwichType>(
         value: type,
         label: sandwich.name,
@@ -250,6 +255,32 @@ class _OrderScreenState extends State<OrderScreen> {
                 backgroundColor: Colors.green,
               ),
               const SizedBox(height: 20),
+
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black12),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${_cart.items.fold<int>(0, (sum, it) => sum + it.quantity)} item(s)',
+                        style: heading2,
+                      ),
+                    ),
+                    Text(
+                      '£${_cart.totalPrice().toStringAsFixed(2)}',
+                      style: heading2,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -284,9 +315,8 @@ class StyledButton extends StatelessWidget {
       onPressed: onPressed,
       style: myButtonStyle,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon),
-          const SizedBox(width: 8),
           Text(label),
         ],
       ),
