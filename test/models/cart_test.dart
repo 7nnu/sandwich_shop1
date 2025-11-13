@@ -1,4 +1,3 @@
-// ...existing code...
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
@@ -6,8 +5,8 @@ import 'package:sandwich_shop/repositories/pricing_repository.dart';
 
 void main() {
   group('Cart', () {
-    test('adding merges by sandwich type + size and ignores bread type', () {
-      final cart = Cart(); // uses default PricingRepository
+    test('merges same sandwich type+size and ignores bread type', () {
+      final cart = Cart();
       final s1 = Sandwich(
         type: SandwichType.veggieDelight,
         isFootlong: false,
@@ -22,13 +21,10 @@ void main() {
       cart.add(s1, quantity: 1);
       cart.add(s2, quantity: 2);
 
-      // merged because same type + size, bread ignored
       expect(cart.items.length, equals(1));
       expect(cart.items.first.sandwich.type, equals(SandwichType.veggieDelight));
       expect(cart.items.first.quantity, equals(3));
-
-      // pricing: six-inch = 7.00 each -> 3 * 7 = 21.0
-      expect(cart.totalPrice(), equals(21.0));
+      expect(cart.totalPrice(), equals(21.0)); // 3 * 7.0
     });
 
     test('same sandwich different sizes are separate lines', () {
@@ -40,18 +36,15 @@ void main() {
       cart.add(foot, quantity: 1);
 
       expect(cart.items.length, equals(2));
-      // pricing: 2 * 7 + 1 * 11 = 25
-      expect(cart.totalPrice(), equals(25.0));
+      expect(cart.totalPrice(), equals(25.0)); // 2*7 + 1*11
     });
 
-    test('calculatePrice delegates to PricingRepository and uses size+quantity', () {
+    test('calculatePrice delegates to PricingRepository using size + quantity', () {
       final repo = PricingRepository();
       final cart = Cart(pricingRepository: repo);
       final foot = Sandwich(type: SandwichType.meatballMarinara, isFootlong: true, breadType: BreadType.white);
 
-      // direct repo calculation for verification
       final expected = repo.calculatePrice(quantity: 3, isFootlong: true);
-
       expect(cart.calculatePrice(foot, 3), equals(expected));
     });
 
@@ -61,7 +54,7 @@ void main() {
 
       cart.add(s, quantity: 2);
       expect(cart.items.first.quantity, equals(2));
-      expect(cart.totalPrice(), equals(22.0)); // 2 * 11
+      expect(cart.totalPrice(), equals(22.0));
 
       cart.updateQuantity(s, 1);
       expect(cart.items.first.quantity, equals(1));
@@ -96,7 +89,7 @@ void main() {
       cart.add(s, quantity: 1);
 
       final items = cart.items;
-      expect(() => items.add(CartItem(sandwich: s, quantity: 1)), throwsA(isA<UnsupportedError>()));
+      expect(() => items.add(items.first), throwsUnsupportedError);
     });
   });
 }
