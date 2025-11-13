@@ -1,4 +1,4 @@
-enum BreadType { white, wheat, wholemeal}
+enum BreadType { White, Wheat, Wholemeal }
 
 enum SandwichType {
   veggieDelight,
@@ -21,13 +21,13 @@ class Sandwich {
   String get name {
     switch (type) {
       case SandwichType.veggieDelight:
-        return "Veggie Delight";
+        return 'Veggie Delight';
       case SandwichType.chickenTeriyaki:
-        return "Chicken Teriyaki";
+        return 'Chicken Teriyaki';
       case SandwichType.tunaMelt:
-        return "Tuna Melt";
+        return 'Tuna Melt';
       case SandwichType.meatballMarinara:
-        return "Meatball Marinara";
+        return 'Meatball Marinara';
     }
   }
 
@@ -39,7 +39,6 @@ class Sandwich {
     } else {
       sizeString = 'six_inch';
     }
-    return 'assets/images/sandwiches/${typeString}_$sizeString.png';
+    return 'assets/images/${typeString}_$sizeString.png';
   }
-
 }
