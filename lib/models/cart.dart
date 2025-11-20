@@ -30,6 +30,23 @@ class Cart {
     _items.clear();
   }
 
+  void increaseQuantity(Sandwich sandwich) {
+    if (_items.containsKey(sandwich)) {
+      _items[sandwich] = _items[sandwich]! + 1;
+    }
+  }
+
+  void decreaseQuantity(Sandwich sandwich) {
+    if (_items.containsKey(sandwich)) {
+      final currentQty = _items[sandwich]!;
+      if (currentQty > 1) {
+        _items[sandwich] = currentQty - 1;
+      } else {
+        _items.remove(sandwich);
+      }
+    }
+  }
+
   double get totalPrice {
     final pricingRepository = PricingRepository();
     double total = 0.0;
