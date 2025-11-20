@@ -1,48 +1,85 @@
-Here are some additional features you can implement to enhance your sandwich shop app:
+## LLM Prompt for Implementing Cart Modification Features in a Flutter Sandwich Shop App
 
-### 1. **Search Functionality**
-   - Allow users to search for sandwiches by name or ingredients on the Order Screen.
+I am building a Flutter app for a sandwich shop. The app has two main pages:
+- **Order Screen:** Users select sandwiches and add them to their cart.
+- **Cart Screen:** Users view the items in their cart and see the total price.
 
-### 2. **Category Filtering**
-   - Add categories (e.g., "Vegetarian", "Non-Vegetarian", "Specials") and allow users to filter sandwiches by category.
+### Relevant Models and Repository
 
-### 3. **Customizable Sandwiches**
-   - Let users customize their sandwiches by selecting bread type, toppings, and sauces.
+- **Sandwich (`lib/models/sandwich.dart`):**
+  - Has `SandwichType`, `BreadType`, and a `bool isFootlong` for size.
+  - Each sandwich has a `name` and an `image` getter for display.
+- **Cart (`lib/models/cart.dart`):**
+  - Stores a map of `Sandwich` to quantity.
+  - Methods: `add(Sandwich, {quantity})`, `remove(Sandwich, {quantity})`, `clear()`, `getQuantity(Sandwich)`.
+  - `totalPrice` is calculated using the `PricingRepository`.
+  - If removing more than the current quantity, the item is removed entirely.
+- **PricingRepository (`lib/repositories/pricing_repository.dart`):**
+  - `calculatePrice({required int quantity, required bool isFootlong})` returns the price for a sandwich based on size and quantity.
 
-### 4. **Favorites**
-   - Allow users to mark sandwiches as favorites and access them quickly from a "Favorites" section.
+### Current UI
 
-### 5. **Order Summary**
-   - On the Cart Screen, display an order summary with itemized prices, taxes, and the total amount.
+- The cart page lists each sandwich, its size, bread type, quantity, and price.
+- The total price is shown at the bottom.
+- There is a "Back to Order" button.
 
-### 6. **Checkout Flow**
-   - Add a checkout process where users can enter their delivery address and payment details.
+---
 
-### 7. **Promotions and Discounts**
-   - Implement a feature for promo codes or discounts that users can apply at checkout.
+## Features to Implement
 
-### 8. **Order History**
-   - Allow users to view their past orders and reorder with a single tap.
+### 1. Change Quantity of an Item
 
-### 9. **Real-Time Cart Updates**
-   - Show a floating cart icon with the total number of items and price that updates in real-time.
+**Description:**  
+Allow users to increase or decrease the quantity of a specific sandwich in their cart.
 
-### 10. **Push Notifications**
-   - Notify users about special deals, new sandwiches, or order status updates.
+**Requirements:**  
+- Each cart item should display "+" and "–" buttons to adjust quantity.
+- Tapping "+" increases the quantity by 1.
+- Tapping "–" decreases the quantity by 1.
+- If the quantity is reduced below 1, the item should be removed from the cart.
+- The total price should update automatically.
+- The UI should update immediately to reflect changes.
 
-### 11. **Dark Mode**
-   - Add a toggle for dark mode to improve user experience.
+**Edge Cases:**  
+- If the user tries to decrease the quantity when it is 1, the item should be removed.
+- Prevent negative quantities.
 
-### 12. **Multi-Language Support**
-   - Provide support for multiple languages to cater to a wider audience.
+---
 
-### 13. **Ratings and Reviews**
-   - Allow users to rate and review sandwiches, and display average ratings on the Order Screen.
+### 2. Remove an Item from the Cart
 
-### 14. **Estimated Delivery Time**
-   - Show an estimated delivery time based on the user's location.
+**Description:**  
+Allow users to remove a sandwich from their cart entirely.
 
-### 15. **Profile Management**
-   - Add a profile section where users can manage their details, view saved addresses, and payment methods.
+**Requirements:**  
+- Each cart item should have a "Remove" button (e.g., a trash icon).
+- Tapping "Remove" deletes the item from the cart.
+- The total price updates accordingly.
+- Show a snackbar or other feedback when an item is removed.
 
-These features will make your app more user-friendly and engaging. Let me know if you'd like help implementing any of these!
+---
+
+### 3. Edit Item Details (Optional)
+
+**Description:**  
+Allow users to edit details of a sandwich in their cart (e.g., change bread type, size, or sandwich type).
+
+**Requirements:**  
+- Each cart item should have an "Edit" button.
+- Tapping "Edit" opens a dialog or navigates to a screen to modify sandwich options.
+- After saving, the cart updates the item (or replaces it if the combination is new).
+- The price and UI update accordingly.
+
+---
+
+### General UI and Behavior Requirements
+
+- All changes should be reflected immediately in the UI.
+- The cart's total price should always be accurate.
+- The cart should handle empty states gracefully (e.g., show a message if the cart is empty).
+- Provide user feedback (e.g., snackbar) for actions like removing or updating items.
+- The UI should prevent adding more than a maximum allowed quantity (see `OrderScreen.maxQuantity`).
+
+---
+
+**Please provide Flutter code and UI suggestions to implement these features, using the provided models and repository.**
