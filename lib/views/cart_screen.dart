@@ -1,11 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:sandwich_shop/models/cart.dart';
 import 'package:sandwich_shop/models/sandwich.dart';
+import 'package:sandwich_shop/views/checkout_screen.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   final Cart cart;
 
   const CartScreen({super.key, required this.cart});
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  Future<void> _navigateToCheckout() async {
+    if (widget.cart.items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your cart is empty'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutScreen(cart: widget.cart),
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        widget.cart.clear();
+      });
+
+      final String orderId = result['orderId'] as String;
+      final String estimatedTime = result['estimatedTime'] as String;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Order $orderId confirmed! Estimated time: $estimatedTime'),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +57,13 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Your Cart'),
       ),
-      body: cart.isEmpty
+      body: widget.cart.isEmpty
           ? const Center(child: Text('Your cart is empty.'))
           : Column(
               children: [
                 Expanded(
                   child: ListView(
-                    children: cart.items.entries.map((entry) {
+                    children: widget.cart.items.entries.map((entry) {
                       final sandwich = entry.key;
                       final quantity = entry.value;
 
@@ -32,23 +76,23 @@ class CartScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(Icons.remove),
                               onPressed: () {
-                                cart.decreaseQuantity(sandwich);
+                                widget.cart.decreaseQuantity(sandwich);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      cart.getQuantity(sandwich) > 0
+                                      widget.cart.getQuantity(sandwich) > 0
                                           ? 'Decreased quantity of ${sandwich.name}.'
                                           : '${sandwich.name} removed from cart.',
                                     ),
                                   ),
                                 );
-                                (context as Element).markNeedsBuild();
+                                setState(() {});
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.add),
                               onPressed: () {
-                                cart.increaseQuantity(sandwich);
+                                widget.cart.increaseQuantity(sandwich);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -56,13 +100,13 @@ class CartScreen extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                                (context as Element).markNeedsBuild();
+                                setState(() {});
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                cart.remove(sandwich, quantity: quantity);
+                                widget.cart.remove(sandwich, quantity: quantity);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -70,7 +114,7 @@ class CartScreen extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                                (context as Element).markNeedsBuild();
+                                setState(() {});
                               },
                             ),
                           ],
@@ -81,17 +125,40 @@ class CartScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      const Text(
-                        'Total:',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total:',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '\£${widget.cart.totalPrice.toStringAsFixed(2)}',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '\£${cart.totalPrice.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      const SizedBox(height: 20),
+                      Builder(
+                        builder: (BuildContext context) {
+                          final bool cartHasItems = widget.cart.items.isNotEmpty;
+                          if (cartHasItems) {
+                            return ElevatedButton.icon(
+                              onPressed: _navigateToCheckout,
+                              icon: const Icon(Icons.payment),
+                              label: const Text('Checkout'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
                       ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
