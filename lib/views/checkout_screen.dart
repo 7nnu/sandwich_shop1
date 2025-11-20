@@ -37,6 +37,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     // Check if this State object is being shown in the widget tree
     if (mounted) {
+      setState(() {
+        _isProcessing = false;
+      });
       // Pop the checkout screen and return to the order screen with the confirmation
       Navigator.pop(context, orderConfirmation);
     }
