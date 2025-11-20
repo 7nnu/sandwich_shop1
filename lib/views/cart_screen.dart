@@ -89,7 +89,7 @@ class CartScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '\$${cart.totalPrice.toStringAsFixed(2)}',
+                        '\£${cart.totalPrice.toStringAsFixed(2)}',
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ],

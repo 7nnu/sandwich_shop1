@@ -70,7 +70,7 @@ void main() {
     testWidgets('updates total price correctly', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: CartScreen(cart: cart)));
 
-      expect(find.textContaining('\$'), findsOneWidget); // Total price is displayed
+      expect(find.textContaining('\£'), findsOneWidget); // Total price is displayed
     });
 
     testWidgets('displays empty cart message when cart is empty', (WidgetTester tester) async {
