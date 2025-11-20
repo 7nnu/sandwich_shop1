@@ -75,3 +75,41 @@ The Cart Modification feature enables users of the Sandwich Shop Flutter app to 
 4. Ensure the total price and UI update immediately after any change.
 5. Provide user feedback (snackbar) for remove and update actions.
 6. Handle empty cart states with a clear message.
+
+---
+
+# Navigation Bar with Drawer
+
+## Overview
+The app should include a navigation bar implemented as a drawer. This drawer must be accessible from all screens and allow users to navigate between the following screens:
+- Order Screen
+- Cart Screen
+- Checkout Screen
+- Profile Screen
+- About Screen
+
+## Functional Requirements
+1. **Drawer Accessibility**: The drawer should be accessible from all screens.
+2. **Navigation Options**:
+   - Order: Navigates to the `OrderScreen`.
+   - Cart: Navigates to the `CartScreen`.
+   - Checkout: Navigates to the `CheckoutScreen`.
+   - Profile: Navigates to the `ProfileScreen`.
+   - About: Navigates to the `AboutScreen`.
+3. **Drawer Header**: The drawer should include a header displaying the app's name or logo.
+4. **Active Screen Highlighting**: The currently active screen should be visually highlighted in the drawer.
+
+## Non-Functional Requirements
+1. **Consistency**: The drawer should have a uniform design across all screens.
+2. **Responsiveness**: The drawer should adapt to various screen sizes and orientations.
+3. **Performance**: The drawer should open and close smoothly without noticeable delays.
+
+## Implementation Notes
+- Use Flutter's `Drawer` widget to implement the navigation bar.
+- Define the drawer in a shared widget or base layout to ensure it appears on all screens.
+- Use `Navigator.pushNamed` for navigation to maintain route consistency.
+- Include icons alongside navigation options for better usability.
+
+## Future Enhancements
+- Add user authentication to display personalized options in the drawer.
+- Include additional screens or features as the app evolves.
