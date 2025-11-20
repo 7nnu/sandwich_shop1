@@ -1,3 +1,17 @@
+# Sandwich Shop App Requirements
+
+## Existing Features
+- Order Screen: Allows users to place sandwich orders.
+- About Screen: Displays information about the app.
+
+## New Features
+- Profile Screen: A screen where users can enter and view their details. No authentication or data persistence is required for now.
+
+## Testing
+- Widget tests must be written for the Profile Screen to ensure it renders correctly and handles user input as expected.
+
+---
+
 # Cart Modification Feature Requirements
 
 ## 1. Feature Description and Purpose
