@@ -42,7 +42,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-// removed styledbutton from order_screen.dart and placed here for reuse
+// removed styledbutton from order_screen.dart and cart_screne and placed here for reuse
 class StyledButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData? icon;
